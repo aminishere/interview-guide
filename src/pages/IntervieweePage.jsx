@@ -1,9 +1,22 @@
-export default function IntervieweePage() {
-    return (
-      <div className="text-center text-gray-700">
-        <h2 className="text-lg font-semibold">Interviewee Portal</h2>
-        <p>Resume upload & interview will appear here.</p>
-      </div>
-    );
-  }
-  
+import React, { useState } from "react";
+import ResumeUploader from "../components/Interviewee/ResumeUploader";
+
+const IntervieweePage = () => {
+  const [candidate, setCandidate] = useState(null);
+
+  return (
+    <div className="p-4">
+      {!candidate && (
+        <ResumeUploader onSubmit={(fields) => setCandidate(fields)} />
+      )}
+      {candidate && (
+        <div>
+          <h2>Welcome, {candidate.name}</h2>
+          {/* Render ChatShell or Interview UI */}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default IntervieweePage;
