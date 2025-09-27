@@ -29,9 +29,11 @@ export default function App() {
         </nav>
       </header>
 
-      <main className="flex-1 p-4">
-        {tab === "interviewee" ? <IntervieweePage /> : <InterviewerPage />}
-      </main>
+      <main className="flex-1 p-4 bg-white">
+  {tab === "interviewee" ? <IntervieweePage /> : <InterviewerPage />}
+</main>
+
+
     </div>
   );
 }
