@@ -18,6 +18,7 @@ export default function App() {
           >
             Interviewee
           </button>
+
           <button
             onClick={() => setTab("interviewer")}
             className={`px-3 py-1 rounded ${
@@ -26,12 +27,13 @@ export default function App() {
           >
             Interviewer
           </button>
+          
         </nav>
       </header>
 
       <main className="flex-1 p-4 bg-white">
-  {tab === "interviewee" ? <IntervieweePage /> : <InterviewerPage />}
-</main>
+        {tab === "interviewee" ? <IntervieweePage /> : <InterviewerPage />}
+      </main>
 
 
     </div>
