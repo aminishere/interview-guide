@@ -6,10 +6,10 @@ import Input from "../common/Input";
 
 const ChatShell = ({ timeLimitSec = 60, onInterviewComplete, questions: propQuestions, currentIndex: propCurrentIndex }) => {
   const dispatch = useDispatch();
-  const storeQuestions = useSelector(state => state.sessions.questions);
-  const storeCurrentIndex = useSelector(state => state.sessions.currentQuestion);
+  const { questions, currentQuestion: currentIndex, paused } = useSelector(state => state.sessions);
+  const currentQuestion = questions[currentIndex];
   
-  // Default questions if none are provided
+  // Default questions if none are provided via props
   const defaultQuestions = [
     { id: 1, text: "Tell me about yourself and your background.", category: "General" },
     { id: 2, text: "What are your greatest strengths and how do they apply to this role?", category: "General" },
@@ -18,47 +18,41 @@ const ChatShell = ({ timeLimitSec = 60, onInterviewComplete, questions: propQues
     { id: 5, text: "Do you have any questions for us about the role or company?", category: "General" },
   ];
   
-  // Use props if provided, otherwise fall back to store, otherwise use defaults
-  const questions = propQuestions || storeQuestions || defaultQuestions;
-  const currentIndex = propCurrentIndex !== undefined ? propCurrentIndex : storeCurrentIndex;
-  const currentQuestion = questions[currentIndex];
-
-  // Initialize questions in store if they don't exist or if current index is invalid
+  // Initialize the interview session in the store once.
   useEffect(() => {
-    if (!hasInitializedRef.current && ((!storeQuestions || storeQuestions.length === 0) || storeCurrentIndex >= (storeQuestions?.length || 0))) {
-      hasInitializedRef.current = true;
-      dispatch(startInterview({ questions: defaultQuestions }));
-    }
-  }, [dispatch, storeQuestions?.length, storeCurrentIndex]);
-
-
+    // Use questions from props if available, otherwise use defaults.
+    const questionsToStart = propQuestions || defaultQuestions;
+    dispatch(startInterview({ questions: questionsToStart }));
+    // Clean up session on component unmount
+    return () => {
+      dispatch(resetSession());
+    };
+  }, [dispatch, propQuestions]); // Reruns only if props change, which is unlikely.
 
   const [answer, setAnswer] = useState("");
-  const hasInitializedRef = useRef(false);
 
-  // Auto-submit logic
+  // Effect for question timer and auto-submission
   useEffect(() => {
-    if (!currentQuestion) return;
-    if (!currentQuestion.startTs) {
+    // Only run if there is a current question and the interview is not paused.
+    if (!currentQuestion || paused) return;
+
+    // Ensure the question timer starts if it hasn't already.
+    if (currentQuestion.startTs === null) {
       dispatch(startQuestion(currentIndex));
     }
 
-    const elapsed = (Date.now() - (currentQuestion.startTs || 0)) + (currentQuestion.elapsedBeforePauseMs || 0);
+    // Calculate remaining time
+    const elapsed = (Date.now() - currentQuestion.startTs) + currentQuestion.elapsedBeforePauseMs;
     const remaining = Math.max(timeLimitSec * 1000 - elapsed, 0);
 
-    if (remaining <= 0) {
-      dispatch(submitAnswer({ answer: "", autoSubmit: true }));
-      setAnswer("");
-      return;
-    }
-
     const timeout = setTimeout(() => {
+      // Submit with current answer, or empty if user typed nothing.
       dispatch(submitAnswer({ answer, autoSubmit: true }));
       setAnswer("");
     }, remaining);
 
     return () => clearTimeout(timeout);
-  }, [currentIndex, timeLimitSec, dispatch, currentQuestion?.startTs, currentQuestion?.elapsedBeforePauseMs]);
+  }, [currentIndex, currentQuestion, paused, timeLimitSec, dispatch, answer]);
 
   if (!questions || questions.length === 0) {
     return (
@@ -68,8 +62,8 @@ const ChatShell = ({ timeLimitSec = 60, onInterviewComplete, questions: propQues
     );
   }
 
-  // Handle completion - only show when we've actually gone through all questions
-  if (currentIndex >= questions.length && questions.length > 0) {
+  // Handle interview completion
+  if (currentIndex >= questions.length) {
     // Call completion callback if provided
     if (onInterviewComplete) {
       onInterviewComplete();
@@ -78,25 +72,6 @@ const ChatShell = ({ timeLimitSec = 60, onInterviewComplete, questions: propQues
       <div className="p-4 text-center">
         <div className="text-green-600 text-lg font-semibold mb-2">🎉 Interview Completed!</div>
         <div className="text-gray-600">Thank you for your time. Your responses have been recorded.</div>
-      </div>
-    );
-  }
-
-  // Handle invalid state - show restart option
-  if (currentIndex >= questions.length && questions.length === 0) {
-    return (
-      <div className="p-4 text-center">
-        <div className="text-red-600 text-lg font-semibold mb-2">Interview Error</div>
-        <div className="text-gray-600 mb-4">The interview session has an invalid state.</div>
-        <button 
-          onClick={() => {
-            dispatch(resetSession());
-            dispatch(startInterview({ questions: defaultQuestions }));
-          }}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Restart Interview
-        </button>
       </div>
     );
   }
