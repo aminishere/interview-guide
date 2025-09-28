@@ -46,9 +46,12 @@ const sessionsSlice = createSlice({
         q.elapsedBeforePauseMs += Date.now() - q.startTs;
         q.startTs = null;
       }
-      // Advance to next question
+      // Advance to next question (or beyond the last question to indicate completion)
       if (state.currentQuestion < state.questions.length - 1) {
         state.currentQuestion += 1;
+      } else {
+        // Mark interview as complete by setting currentQuestion beyond the array
+        state.currentQuestion = state.questions.length;
       }
     },
     nextQuestion: (state) => {

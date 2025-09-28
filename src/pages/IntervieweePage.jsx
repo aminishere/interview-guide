@@ -1,27 +1,15 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import ResumeUploader from "../components/Interviewee/ResumeUploader";
 import ChatShell from "../components/Interviewee/ChatShell";
-import { startInterview } from "../store/slices/sessionsSlice";
 import Button from "../components/common/Button";
 
 const IntervieweePage = () => {
   const [candidate, setCandidate] = useState(null);
   const [interviewStarted, setInterviewStarted] = useState(false);
-  const dispatch = useDispatch();
-
-  const sampleQuestions = [
-    { id: 1, text: "Tell me about yourself and your background.", category: "General" },
-    { id: 2, text: "What are your greatest strengths and how do they apply to this role?", category: "General" },
-    { id: 3, text: "Describe a challenging project you worked on and how you overcame obstacles.", category: "Behavioral" },
-    { id: 4, text: "Where do you see yourself in 5 years?", category: "Career Goals" },
-    { id: 5, text: "Do you have any questions for us about the role or company?", category: "General" },
-  ];
 
   const handleResumeSubmit = (fields) => setCandidate(fields);
 
   const startInterviewSession = () => {
-    dispatch(startInterview({ questions: sampleQuestions }));
     setInterviewStarted(true);
   };
 
