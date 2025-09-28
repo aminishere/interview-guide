@@ -36,13 +36,4 @@ a:hover {
 }
 
 /* Buttons (basic reset, Tailwind handles styling) */
-button {
-  font-family: inherit;
-  font-size: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-button:focus {
-  outline: none;
-}
+

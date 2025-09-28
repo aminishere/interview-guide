@@ -16,23 +16,12 @@ const ResumeForm = ({ fields, onFieldChange, onSubmit, disabled }) => (
       />
     ))}
     
-    <button 
+    <Button 
       onClick={onSubmit} 
       disabled={disabled}
-      style={{
-        backgroundColor: disabled ? '#9ca3af' : '#2563eb',
-        color: 'white',
-        padding: '8px 16px',
-        borderRadius: '6px',
-        border: 'none',
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        fontSize: '14px',
-        fontWeight: '500',
-        minWidth: '80px'
-      }}
     >
       Submit
-    </button>
+    </Button>
   </div>
 );
 

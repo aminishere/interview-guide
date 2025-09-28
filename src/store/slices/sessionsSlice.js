@@ -40,11 +40,15 @@ const sessionsSlice = createSlice({
     },
     submitAnswer: (state, action) => {
       const q = state.questions[state.currentQuestion];
-      q.answer = action.payload;
+      q.answer = action.payload.answer;
       q.submittedAt = Date.now();
       if (q.startTs) {
         q.elapsedBeforePauseMs += Date.now() - q.startTs;
         q.startTs = null;
+      }
+      // Advance to next question
+      if (state.currentQuestion < state.questions.length - 1) {
+        state.currentQuestion += 1;
       }
     },
     nextQuestion: (state) => {

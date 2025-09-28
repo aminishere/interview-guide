@@ -24,7 +24,9 @@ const ChatShell = ({ timeLimitSec = 60, onInterviewComplete, questions: propQues
   // Auto-submit logic
   useEffect(() => {
     if (!currentQuestion) return;
-    if (!currentQuestion.startTs) dispatch(startQuestion(currentIndex));
+    if (!currentQuestion.startTs) {
+      dispatch(startQuestion(currentIndex));
+    }
 
     const elapsed = (Date.now() - (currentQuestion.startTs || 0)) + (currentQuestion.elapsedBeforePauseMs || 0);
     const remaining = Math.max(timeLimitSec * 1000 - elapsed, 0);
@@ -41,7 +43,7 @@ const ChatShell = ({ timeLimitSec = 60, onInterviewComplete, questions: propQues
     }, remaining);
 
     return () => clearTimeout(timeout);
-  }, [currentQuestion]);
+  }, [currentIndex, timeLimitSec, dispatch, currentQuestion?.startTs, currentQuestion?.elapsedBeforePauseMs]);
 
   if (!questions || questions.length === 0) {
     return (

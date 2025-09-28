@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import ResumeUploader from "../components/Interviewee/ResumeUploader";
 import ChatShell from "../components/Interviewee/ChatShell";
 import { startInterview } from "../store/slices/sessionsSlice";
+import Button from "../components/common/Button";
 
 const IntervieweePage = () => {
   const [candidate, setCandidate] = useState(null);
@@ -41,25 +42,12 @@ const IntervieweePage = () => {
             <p className="text-gray-600 mb-6">
               Your resume has been processed. Ready to start your interview?
             </p>
-            <button
+            <Button
               onClick={startInterviewSession}
               disabled={!candidate.name?.trim() || !candidate.email?.trim() || !candidate.phone?.trim()}
-              style={{
-                backgroundColor: (!candidate.name || !candidate.email || !candidate.phone) ? '#9ca3af' : '#2563eb',
-                color: 'white',
-                padding: '12px 32px',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: (!candidate.name || !candidate.email || !candidate.phone) ? 'not-allowed' : 'pointer',
-                fontSize: '16px',
-                fontWeight: '600',
-                minWidth: '140px',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                transition: 'background-color 0.2s'
-              }}
             >
               Start Interview
-            </button>
+            </Button>
           </div>
         </div>
       )}
