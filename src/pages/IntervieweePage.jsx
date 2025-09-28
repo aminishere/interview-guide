@@ -44,11 +44,19 @@ const IntervieweePage = () => {
             <button
               onClick={startInterviewSession}
               disabled={!candidate.name?.trim() || !candidate.email?.trim() || !candidate.phone?.trim()}
-              className={`px-8 py-3 rounded-lg font-semibold shadow-lg transition-colors ${
-                !candidate.name || !candidate.email || !candidate.phone
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
-              }`}
+              style={{
+                backgroundColor: (!candidate.name || !candidate.email || !candidate.phone) ? '#9ca3af' : '#2563eb',
+                color: 'white',
+                padding: '12px 32px',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: (!candidate.name || !candidate.email || !candidate.phone) ? 'not-allowed' : 'pointer',
+                fontSize: '16px',
+                fontWeight: '600',
+                minWidth: '140px',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                transition: 'background-color 0.2s'
+              }}
             >
               Start Interview
             </button>
