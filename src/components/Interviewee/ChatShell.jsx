@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { submitAnswer, startQuestion, startInterview, resetSession } from "../../store/slices/sessionsSlice";
 import Button from "../common/Button";
 import Input from "../common/Input";
+import TimeRemaining from "../common/TimeRemaining";
 
 const ChatShell = ({ timeLimitSec = 60, onInterviewComplete, questions: propQuestions, currentIndex: propCurrentIndex }) => {
   const dispatch = useDispatch();
@@ -86,6 +87,12 @@ const ChatShell = ({ timeLimitSec = 60, onInterviewComplete, questions: propQues
       <div>
         <strong>Question {currentIndex + 1}/{questions.length}:</strong>
         <p>{currentQuestion.text}</p>
+        <TimeRemaining
+          startTime={currentQuestion.startTs}
+          timeLimitSec={timeLimitSec}
+          elapsedBeforePauseMs={currentQuestion.elapsedBeforePauseMs}
+          paused={paused}
+        />
       </div>
       <Input
         value={answer}
