@@ -47,9 +47,6 @@ const IntervieweePage = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Welcome, {candidate.name}!
               </h2>
-              <p className="text-gray-600">
-                Your interview has started. You have 2 minutes per question.
-              </p>
             </div>
             <ChatShell timeLimitSec={120} />
           </div>
