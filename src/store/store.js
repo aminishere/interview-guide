@@ -8,7 +8,11 @@ import questionsConfigReducer from "./slices/questionsConfigSlice";
 const rootReducer = combineReducers({
   sessions: sessionsReducer,
   ui: uiReducer,
+  
   questionsConfig: questionsConfigReducer,
+
+
+  
 });
 
 export const store = configureStore({
